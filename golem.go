@@ -28,6 +28,7 @@ var qs = []*survey.Question{
 				"chore    | other changes that doesn't modify src/test",
 				"revert   | revert previous commit"},
 			Default: "feat",
+			PageSize: 10,
 		},
 	},
 	{
@@ -49,7 +50,8 @@ var qs = []*survey.Question{
 
 func main() {
 
-	noIssue := kingpin.Flag("no-issue", "commit without an issue").Short('n').Bool()
+	// noIssue := kingpin.Flag("no-issue", "commit without an issue").Short('n').Bool()
+	noIssue := true
 	// the answers will be written to this struct
 	answers := struct {
 		Type    string `survey:"type"`
@@ -59,7 +61,7 @@ func main() {
 	}{}
 
 	kingpin.Parse()
-	if *noIssue {
+	if noIssue {
 		qs = RemoveIndex(qs, 3)
 	}
 	// perform the questions
@@ -70,7 +72,7 @@ func main() {
 	}
 
 	out := fmt.Sprintf("%s(%s): %s | %s", answers.Type, answers.Scope, answers.Issue, answers.Message)
-	if *noIssue {
+	if noIssue {
 		out = fmt.Sprintf("%s(%s): %s", answers.Type, answers.Scope, answers.Message)
 	}
 	fmt.Printf("message: %s", out)
